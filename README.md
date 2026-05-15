@@ -65,6 +65,9 @@ uv reads `.python-version` and downloads Python 3.12 on first sync — no
 separate `pyenv` install is needed.
 
 ```bash
+# Pull the ai-rules submodule (one-time after fresh clone)
+git submodule update --init --recursive
+
 # Sync deps (creates .venv and downloads Python 3.12 if missing)
 uv sync --extra dev
 
@@ -94,3 +97,7 @@ CI runs all of the above on push / PR. See `.github/workflows/ci.yml`.
 - `docs/validate.md` — validation report format
 - ClickUp epic [DATA-1640](https://app.clickup.com/t/86ag66jjr) — People API Data Loading Revamp
 - POC: [thegoodparty/poc-voterfile-loader](https://github.com/thegoodparty/poc-voterfile-loader)
+
+## License
+
+Released under the [Good Party Open Source License v1.0](LICENSE.md) — see `LICENSE.md` for the full terms.
