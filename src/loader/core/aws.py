@@ -70,6 +70,11 @@ def put_secret(cfg: BaseLoaderConfig, secret_id: str, value: str, description: s
             Tags=cfg.tags_as_aws(),
         )
     except client.exceptions.ResourceExistsException:
+        # Re-tag first: a pre-existing secret (manual, older loader version, or
+        # one whose tag was removed) may be untagged, and the value update below
+        # is pointless if `aws:ResourceTag/Environment` IAM conditions then deny
+        # GetSecretValue. tag_resource is idempotent on an already-tagged secret.
+        client.tag_resource(SecretId=secret_id, Tags=cfg.tags_as_aws())
         client.put_secret_value(SecretId=secret_id, SecretString=value)
 
 

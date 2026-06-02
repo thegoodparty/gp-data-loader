@@ -229,14 +229,19 @@ def status(run_date: RunDateArg) -> None:
     for name, model in steps:
         try:
             m = read_manifest(cfg, run_date, name, model)
-        except Exception:
-            m = None
+        except Exception as exc:
+            log.warning("manifest unreadable for step %s: %s", name, exc)
+            tbl.add_row(name, "[red]error[/red]", str(exc))
+            continue
         if m is None:
             tbl.add_row(name, "—", "")
         else:
-            status_text = (
-                "[green]complete[/green]" if m.status == "complete" else "[yellow]in_progress[/yellow]"
-            )
+            if m.status == "complete":
+                status_text = "[green]complete[/green]"
+            elif m.status == "failed":
+                status_text = "[red]failed[/red]"
+            else:
+                status_text = "[yellow]in_progress[/yellow]"
             tbl.add_row(
                 name,
                 status_text,
